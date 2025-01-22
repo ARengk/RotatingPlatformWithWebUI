@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servo Control</title>
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          height: 100vh;
+          color: #333;
+        }
+
+        h1 {
+          font-size: 2.5em;
+          margin-bottom: 20px;
+          color: #222222;
+        }
+
+        p {
+          font-size: 1.2em;
+          margin-bottom: 20px;
+        }
+
+        #angle {
+          font-weight: bold;
+          color: #004d40;
+        }
+
+        .circle-container {
+          position: relative;
+          width: 300px;
+          height: 300px;
+          margin: 20px auto;
+        }
+
+        .button-circle {
+          position: absolute;
+          width: 60px;
+          height: 60px;
+          background-color: #FF796b;
+          color: white;
+          border: none;
+          border-radius: 50%;
+          font-size: 1em;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background-color 0.3s;
+        }
+
+        .button-circle:hover {
+          background-color: #104d40;
+        }
+
+        .button-circle:active {
+          background-color: #11332b;
+        }
+
+        .button-center {
+          position: absolute;
+          width: 100px;
+          height: 100px;
+          background-color: #006732;
+          color: white;
+          border: none;
+          border-radius: 50%;
+          font-size: 1em;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          transition: background-color 0.3s;
+        }
+
+        .button-center:hover {
+          background-color: #00dd40;
+        }
+
+        .button-center:active {
+          background-color: #00332b;
+        }
+
+        /* Positions for buttons around the circle */
+        .angle-0 { top: 0; left: 50%; transform: translate(-50%, -50%); }
+        .angle-45 { top: 15%; left: 85%; transform: translate(-50%, -50%); }
+        .angle-90 { top: 50%; left: 100%; transform: translate(-50%, -50%); }
+        .angle-135 { top: 85%; left: 85%; transform: translate(-50%, -50%); }
+        .angle-180 { top: 100%; left: 50%; transform: translate(-50%, -50%); }
+        .angle-225 { top: 85%; left: 15%; transform: translate(-50%, -50%); }
+        .angle-270 { top: 50%; left: 0; transform: translate(-50%, -50%); }
+        .angle-315 { top: 15%; left: 15%; transform: translate(-50%, -50%); }
+
+        /* Additional buttons for -1° and +1° */
+        .button-left {
+          position: absolute;
+          top: 50%;
+          left: -50px;
+          transform: translate(-200%, -50%);
+          width: 70px;
+          height: 70px;
+          background-color: #00796b;
+          color: white;
+          border: none;
+          border-radius: 50%;
+          font-size: 1em;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background-color 0.3s;
+        }
+
+        .button-left:hover {
+          background-color: #004d40;
+        }
+
+        .button-left:active {
+          background-color: #00332b;
+        }
+
+        .button-right {
+          position: absolute;
+          top: 50%;
+          right: -50px;
+          transform: translate(200%, -50%);
+          width: 70px;
+          height: 70px;
+          background-color: #00796b;
+          color: white;
+          border: none;
+          border-radius: 50%;
+          font-size: 1em;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background-color 0.3s;
+        }
+
+        .button-right:hover {
+          background-color: #004d40;
+        }
+
+        .button-right:active {
+          background-color: #00332b;
+        }
+    </style>
+</head>
+<body>
+<h1>Rotate Platform</h1>
+<p>Current angle: <span id="angle">0</span>&deg;</p>
+
+<div class="circle-container">
+    <button class="button-circle angle-0" onclick="sendCommand('0')">0°</button>
+    <button class="button-circle angle-45" onclick="sendCommand('45')">45°</button>
+    <button class="button-circle angle-90" onclick="sendCommand('90')">90°</button>
+    <button class="button-circle angle-135" onclick="sendCommand('135')">135°</button>
+    <button class="button-circle angle-180" onclick="sendCommand('180')">180°</button>
+    <button class="button-circle angle-225" onclick="sendCommand('225')">225°</button>
+    <button class="button-circle angle-270" onclick="sendCommand('270')">270°</button>
+    <button class="button-circle angle-315" onclick="sendCommand('315')">315°</button>
+    <button class="button-center" onclick="sendCommand('zero')">Calibrate</button>
+    <button class="button-left" onclick="sendCommand('left')">-1°</button>
+    <button class="button-right" onclick="sendCommand('right')">+1°</button>
+
+</div>
+<div>
+
+</div>
+
+<script>
+    async function sendCommand(cmd) {
+      const res = await fetch('/control?cmd=' + cmd);
+      const angle = await res.text();
+      document.getElementById('angle').innerText = angle;
+    }
+</script>
+</body>
+</html>
